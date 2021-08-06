@@ -83,16 +83,24 @@ WSGI_APPLICATION = 'zibal.wsgi.application'
 #     }
 # }
 
-MONGO_USER = 'mongouser'
-MONGO_PASS = 'password'
-MONGO_HOST = 'thehost'
-MONGO_NAME = 'thedb'
+MONGO_LOCAL = True
+
+MONGO_USER = ''
+MONGO_PASS = ''
+MONGO_HOST = ''
+MONGO_NAME = 'zibal'
+
 
 MONGO_DATABASE_HOST = \
-'mongodb://%s:%s@%s/%s' \
-% (MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_NAME)
+    'mongodb://%s:%s@%s/%s' \
+    % (MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_NAME)
 
-mongoengine.connect(MONGO_NAME, host=MONGO_DATABASE_HOST)
+if MONGO_LOCAL:
+    # connect to default local mongo server.
+    mongoengine.connect(db=MONGO_NAME)
+else:
+    mongoengine.connect(db=MONGO_NAME, host=MONGO_DATABASE_HOST)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -136,3 +144,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MAX_TRANSACTION_COUNT = 100
