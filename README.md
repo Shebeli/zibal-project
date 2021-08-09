@@ -10,6 +10,20 @@ To setup project mongodb connection, refer to settings.py and update this parame
 
 If you are running mongodb by its default setting and on local, (localhost:27017) just set MONGO_LOCAL to True and specify your database name on MONGO_NAME.
 
+## Installation
+
+This project uses `poetry` which handles dependencies and the virtual env.
+
+If this is your first time using poetry, use `pip install poetry` to install poetry.
+
+Then, in the directory of `pyproject.toml` type `poetry install` to install the project dependencies on your local.
+
+Use `poetry shell` at the same directory to enter the virtual env.
+
+From shell, you can run the django server.
+
+https://python-poetry.org/docs/basic-usage/
+
 ## New Transaction Collection
 
 You can specify the number of max allowed documents on `transaction` collection by changing `MAX_TRANSACTION_COUNT` in the settings
