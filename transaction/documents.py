@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from mongoengine import (Document, DateTimeField, IntField,
-                         ObjectIdField, queryset_manager)
+                         ObjectIdField, QuerySet)
 from django.conf import settings
+
+from transaction.manager import TransactionQuerySet
 
 
 class AbstractTransaction(Document):
@@ -12,23 +14,19 @@ class AbstractTransaction(Document):
 
     meta = {
         'abstract': True,
+        'queryset_class': TransactionQuerySet,
         'ordering': ['-createdAt']
     }
-
-# class TransactionExtra(AbstractTransaction):
-#     """Uses the same document and schema to store data"""
-#     pass
 
 
 class Transaction(AbstractTransaction):
 
-    # might need to add this method to queryset
-    @classmethod
-    def is_overload(cls):
-        return cls.objects.count() > settings.MAX_TRANSACTION_COUNT
-
     def save(self, *args, **kwargs):
-        if self.is_overload():
+        if self.objects.is_overload():
             self.switch_collection('transaction_extra')
             return super().save(*args, **kwargs)
         return super().save(*args, **kwargs)
+
+
+class TransactionExtra(AbstractTransaction): # to access the extra collection
+    pass
